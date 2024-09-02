@@ -6,8 +6,41 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 export default function Home() {
   const [url, setUrl] = useState('');
-  const [categorizedProducts, setCategorizedProducts] = useState([]);
+  const [categorizedProducts, setCategorizedProducts] = useState({});
   const [error, setError] = useState('');
+
+  const categorizeProducts = (products) => {
+    const categories = {
+      'Carnes': ['carne', 'bife', 'filé', 'frango', 'porco', 'costela', 'picanha', 'parmegiana'],
+      'Massas': ['massa', 'macarrão', 'espaguete', 'lasanha', 'ravioli', 'gnocchi'],
+      'Peixes e Frutos do Mar': ['peixe', 'salmão', 'camarão', 'frutos do mar', 'bacalhau'],
+      'Bebidas': ['bebida', 'suco', 'refrigerante', 'água', 'cerveja', 'vinho'],
+      'Saladas': ['salada', 'alface', 'rúcula', 'agrião', 'tomate', 'cebola'],
+      'Sobremesas': ['sobremesa', 'açaí', 'brigadeiro', 'chocolate', 'doce', 'bolo', 'torta', 'pudim', 'sorvete'],
+      'Pizzas': ['pizza', 'calzone'],
+      'Lanches': ['sanduíche', 'lanche', 'hambúrguer', 'cachorro-quente', 'wrap']
+    };
+
+    return products.reduce((acc, product) => {
+      console.log("Processing product:", product); // Debugging step
+      const category = assignCategory(product);
+      if (!acc[category]) acc[category] = [];
+      acc[category].push(product);
+      return acc;
+    }, {});
+  };
+
+  const assignCategory = (item) => {
+    const name = item.name?.toLowerCase() || '';
+    const description = item.description?.toLowerCase() || '';
+
+    for (const [category, keywords] of Object.entries(categories)) {
+      if (keywords.some(keyword => name.includes(keyword) || description.includes(keyword))) {
+        return category;
+      }
+    }
+    return 'Outros';
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -24,61 +57,23 @@ export default function Home() {
       }
 
       const data = await response.json();
-      console.log("API Response Data:", data);
+      console.log("API Response Data:", data); // Debugging step
 
       if (data.error) {
         setError(data.error);
         setCategorizedProducts({});
       } else {
-        // Ensure the data is an array before proceeding
-          const categorized = categorizeProductsFunction(data.produtos);
-          setCategorizedProducts(categorized);
-	  console.log('categorizados:', categorized);
-        }
-      
+        // Check if data.content is the correct array of products
+        const categorized = categorizeProducts(data);
+        console.log("Categorized Products:", categorized); // Debugging step
+        setCategorizedProducts(categorized);
+        setError('');
+      }
     } catch (error) {
       setError(error.message);
       setCategorizedProducts({});
     }
   };
-
-  function categorizeProductsFunction(products) {
-    const categories = {
-      'Carnes': ['carne', 'bife', 'filé', 'frango', 'porco', 'costela', 'picanha', 'parmegiana'],
-      'Massas': ['massa', 'macarrão', 'espaguete', 'lasanha', 'ravioli', 'gnocchi'],
-      'Peixes e Frutos do Mar': ['peixe', 'salmão', 'camarão', 'frutos do mar', 'bacalhau'],
-      'Bebidas': ['bebida', 'suco', 'refrigerante', 'água', 'cerveja', 'vinho'],
-      'Saladas': ['salada', 'alface', 'rúcula', 'agrião', 'tomate', 'cebola'],
-      'Sobremesas': ['sobremesa', 'açaí', 'brigadeiro', 'chocolate', 'doce', 'bolo', 'torta', 'pudim', 'sorvete'],
-      'Pizzas': ['pizza', 'calzone'],
-      'Lanches': ['sanduíche', 'lanche', 'hambúrguer', 'cachorro-quente', 'wrap'],
-      'Outros': [] // Default category for uncategorized products
-    };
-
-    const categorized = [];
-
-    products.forEach((product) => {
-      let foundCategory = 'Outros';
-
-      // Check each product against category keywords
-      for (const [category, keywords] of Object.entries(categories)) {
-        if (keywords.some(keyword => product.name.toLowerCase().includes(keyword) || product.description.toLowerCase().includes(keyword))) {
-          foundCategory = category;
-          break;
-        }
-      }
-
-      // Initialize array for category if it doesn't exist
-      if (!categorized[foundCategory]) {
-        categorized[foundCategory] = [];
-      }
-
-      // Add product to the appropriate category
-      categorized[foundCategory].push(product);
-    });
-
-    return categorized;
-  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
@@ -106,7 +101,7 @@ export default function Home() {
             </Button>
           </form>
           {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-          {Object.keys(categorizedProducts).length > 0 && (
+          {Object.entries(categorizedProducts).length > 0 && (
             Object.entries(categorizedProducts).map(([category, products]) => (
               <div key={category} className="mb-10">
                 <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-red-500">

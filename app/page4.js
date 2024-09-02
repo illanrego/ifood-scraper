@@ -5,11 +5,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function Home() {
-  const [url, setUrl] = useState('');
-  const [categorizedProducts, setCategorizedProducts] = useState([]);
-  const [error, setError] = useState('');
 
-  const handleSubmit = async (event) => {
+const [url, setUrl] = useState('');
+const [categorizedProducts, setCategorizedProducts] = useState({});
+const [error, setError] = useState('');
+
+
+const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
@@ -24,63 +26,65 @@ export default function Home() {
       }
 
       const data = await response.json();
-      console.log("API Response Data:", data);
+      console.log("API Response Data:", data); // Debugging step
 
       if (data.error) {
         setError(data.error);
         setCategorizedProducts({});
+	console.log('erro com a data??');
       } else {
-        // Ensure the data is an array before proceeding
-          const categorized = categorizeProductsFunction(data.produtos);
-          setCategorizedProducts(categorized);
-	  console.log('categorizados:', categorized);
-        }
-      
+        // Check if data.content is the correct array of products
+        const categorized = categorizeProductsFunction(data);
+        console.log("Categorized Products:", categorized); // Debugging step
+        setCategorizedProducts(categorized);
+        setError('');
+      }
     } catch (error) {
       setError(error.message);
       setCategorizedProducts({});
     }
   };
 
-  function categorizeProductsFunction(products) {
-    const categories = {
-      'Carnes': ['carne', 'bife', 'filé', 'frango', 'porco', 'costela', 'picanha', 'parmegiana'],
-      'Massas': ['massa', 'macarrão', 'espaguete', 'lasanha', 'ravioli', 'gnocchi'],
-      'Peixes e Frutos do Mar': ['peixe', 'salmão', 'camarão', 'frutos do mar', 'bacalhau'],
-      'Bebidas': ['bebida', 'suco', 'refrigerante', 'água', 'cerveja', 'vinho'],
-      'Saladas': ['salada', 'alface', 'rúcula', 'agrião', 'tomate', 'cebola'],
-      'Sobremesas': ['sobremesa', 'açaí', 'brigadeiro', 'chocolate', 'doce', 'bolo', 'torta', 'pudim', 'sorvete'],
-      'Pizzas': ['pizza', 'calzone'],
-      'Lanches': ['sanduíche', 'lanche', 'hambúrguer', 'cachorro-quente', 'wrap'],
-      'Outros': [] // Default category for uncategorized products
-    };
+ 
+function categorizeProductsFunction(x) {
+     // Define your categories and associated keywords
+     const categories = {
+         'Carnes': ['carne', 'bife', 'filé', 'frango', 'porco', 'costela', 'picanha','parmegiana'],
+         'Massas': ['massa', 'macarrão', 'espaguete', 'lasanha', 'ravioli', 'gnocchi'],
+         'Peixes e Frutos do Mar': ['peixe', 'salmão', 'camarão', 'frutos do mar', 'bacalhau'],
+         'Bebidas': ['bebida', 'suco', 'refrigerante', 'água', 'cerveja', 'vinho'],
+         'Saladas': ['salada', 'alface', 'rúcula', 'agrião', 'tomate', 'cebola'],
+         'Sobremesas': ['sobremesa','açaí', 'brigadeiro', 'chocolate', 'doce', 'bolo', 'torta', 'pudim', 'sorvete'],
+         'Pizzas': ['pizza', 'calzone'],
+         'Lanches': ['sanduíche', 'lanche', 'hambúrguer', 'cachorro-quente', 'wrap']
+     };
+ 
+     // Function to assign category based on keywords
+     function assignCategory(item) {
+         const name = item.name.toLowerCase();
+         const description = item.description.toLowerCase();
+ 
+         // Loop through categories and check for keywords
+         for (const [category, keywords] of Object.entries(categories)) {
+             if (keywords.some(keyword => name.includes(keyword) || description.includes(keyword))) {
+                 return category;  // Return the category if a match is found
+             }
+         }
+         return 'Outros'; // Default category if no match is found
+     }
+ 
+     // Categorize products
+     const catProducts =  x.map(item => ({
+         ...item,
+         categoria: assignCategory(item)
+     }));
+	console.log(catProducts);
+	return catProducts;
+ }
 
-    const categorized = [];
 
-    products.forEach((product) => {
-      let foundCategory = 'Outros';
 
-      // Check each product against category keywords
-      for (const [category, keywords] of Object.entries(categories)) {
-        if (keywords.some(keyword => product.name.toLowerCase().includes(keyword) || product.description.toLowerCase().includes(keyword))) {
-          foundCategory = category;
-          break;
-        }
-      }
-
-      // Initialize array for category if it doesn't exist
-      if (!categorized[foundCategory]) {
-        categorized[foundCategory] = [];
-      }
-
-      // Add product to the appropriate category
-      categorized[foundCategory].push(product);
-    });
-
-    return categorized;
-  }
-
-  return (
+ return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
       <Card className="w-full max-w-4xl bg-white shadow-xl rounded-xl overflow-hidden">
         <CardHeader className="bg-gradient-to-r from-red-500 to-red-700 text-white py-6 px-8">
@@ -106,7 +110,7 @@ export default function Home() {
             </Button>
           </form>
           {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-          {Object.keys(categorizedProducts).length > 0 && (
+          {Object.entries(categorizedProducts).length > 0 && (
             Object.entries(categorizedProducts).map(([category, products]) => (
               <div key={category} className="mb-10">
                 <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-red-500">
