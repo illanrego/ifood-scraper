@@ -26,7 +26,7 @@ export async function POST(request) {
                  const description = element.querySelector('span.dish-card__details') ? element.querySelector('span.dish-card__details').textContent.trim() : '';
  
                  const price = element.querySelector('span.dish-card__price--discount')
-                     ? element.querySelector('span.dish-card__price--discount').textContent.trim()
+                     ? element.querySelector('span.dish-card__price--discount').textContent.trim().slice(0,-8)
                      : (element.querySelector('span.dish-card__price')
                          ? element.querySelector('span.dish-card__price').textContent.trim()
                          : '');
