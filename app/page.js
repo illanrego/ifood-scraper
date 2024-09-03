@@ -46,14 +46,14 @@ export default function Home() {
 
   function categorizeProductsFunction(products) {
     const categories = {
+      'Combos': ['+', 'combo', 'combos'],
       'Proteína': ['carne', 'bife', 'filé','sanduíche', 'sanduiche', 'hamburger', 'frango', 'porco', 'costela', 'picanha', 'parmegiana','boi','hambúrguer','hamburguer'],
       'Massas (de engordar)': ['massa', 'macarrão', 'espaguete', 'lasanha', 'ravioli', 'gnocchi'],
-      'Combos': ['+'],
       'Peixes e Frutos do Mar': ['peixe', 'salmão', 'camarão', 'frutos do mar', 'bacalhau'],
-      'Líquidos (de beber)': ['bebida', 'suco', 'refrigerante','refri', 'pepsi', 'coca-cola','soda', 'sukita', 'lata', 'jarra', 'energético', 'água', 'cerveja', 'vinho','coca cola','guaraná', 'guarana','guarapan','mate couro', 'mate-couro'],
+      'Líquidos (de beber)': ['bebida', 'suco', 'refrigerante','refri', 'pepsi', 'coca-cola','soda', 'sukita', 'lata', 'jarra', 'energético', 'agua', 'mineral','água', 'cerveja', 'vinho','coca cola','guaraná', 'guarana','guarapan','mate couro', 'mate-couro'],
+      'Pizzas': ['pizza', 'calzone', 'brotinho', 'gigante', 'moda'],
       'Saladas': ['salada', 'rúcula', 'humus', 'agrião' ],
       'Sobremesas': ['sobremesa', 'açaí','açai', 'brigadeiro', 'chocolate', 'doce', 'bolo', 'nutella', 'nutela', 'baunilha', 'donut', 'cookie', 'pudim', 'sorvete','beijinho', 'trento', 'valsa', 'baton'],
-      'Pizzas': ['pizza', 'calzone', 'brotinho', 'gigante', 'moda'],
       'Lanches': ['salgadinhos','coxinha', 'lanche', 'salgado','kibe', 'esfiha', 'cachorro-quente', 'wrap'],
       'Outros': [] // Default category for uncategorized products
     };
