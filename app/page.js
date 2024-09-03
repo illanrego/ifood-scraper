@@ -1,3 +1,5 @@
+// feito com nextjs chatgpt estudo e resiliencia (ignorancia)
+
 'use client';
 
 import { useState } from 'react';
@@ -44,14 +46,15 @@ export default function Home() {
 
   function categorizeProductsFunction(products) {
     const categories = {
-      'Carnes': ['carne', 'bife', 'filé', 'frango', 'porco', 'costela', 'picanha', 'parmegiana'],
-      'Massas': ['massa', 'macarrão', 'espaguete', 'lasanha', 'ravioli', 'gnocchi'],
+      'Proteína': ['carne', 'bife', 'filé','sanduíche', 'sanduiche', 'hamburger', 'frango', 'porco', 'costela', 'picanha', 'parmegiana','boi','hambúrguer','hamburguer'],
+      'Massas (de engordar)': ['massa', 'macarrão', 'espaguete', 'lasanha', 'ravioli', 'gnocchi'],
+      'Combos': ['+'],
       'Peixes e Frutos do Mar': ['peixe', 'salmão', 'camarão', 'frutos do mar', 'bacalhau'],
-      'Bebidas': ['bebida', 'suco', 'refrigerante', 'água', 'cerveja', 'vinho'],
-      'Saladas': ['salada', 'alface', 'rúcula', 'agrião', 'tomate', 'cebola'],
-      'Sobremesas': ['sobremesa', 'açaí', 'brigadeiro', 'chocolate', 'doce', 'bolo', 'torta', 'pudim', 'sorvete'],
-      'Pizzas': ['pizza', 'calzone'],
-      'Lanches': ['sanduíche', 'lanche', 'hambúrguer', 'cachorro-quente', 'wrap'],
+      'Líquidos (de beber)': ['bebida', 'suco', 'refrigerante','refri', 'pepsi', 'coca-cola','soda', 'sukita', 'lata', 'jarra', 'energético', 'água', 'cerveja', 'vinho','coca cola','guaraná', 'guarana','guarapan','mate couro', 'mate-couro'],
+      'Saladas': ['salada', 'rúcula', 'humus', 'agrião' ],
+      'Sobremesas': ['sobremesa', 'açaí','açai', 'brigadeiro', 'chocolate', 'doce', 'bolo', 'nutella', 'nutela', 'baunilha', 'donut', 'cookie', 'pudim', 'sorvete','beijinho', 'trento', 'valsa', 'baton'],
+      'Pizzas': ['pizza', 'calzone', 'brotinho', 'gigante', 'moda'],
+      'Lanches': ['salgadinhos','coxinha', 'lanche', 'salgado','kibe', 'esfiha', 'cachorro-quente', 'wrap'],
       'Outros': [] // Default category for uncategorized products
     };
 
@@ -85,10 +88,10 @@ export default function Home() {
       <Card className="w-full max-w-4xl bg-white shadow-xl rounded-xl overflow-hidden">
         <CardHeader className="bg-gradient-to-r from-red-500 to-red-700 text-white py-6 px-8">
           <CardTitle className="text-center text-3xl font-extrabold tracking-wide">
-            Web Scraper
+           Ifood Scraper by Illan 
           </CardTitle>
           <CardDescription className="text-center text-black text-base mt-2 opacity-90">
-            Insira uma URL para gerar um cardápio
+            Insira o endereço (URL) de um restaurante no ifood para gerar um cardápio automático
           </CardDescription>
         </CardHeader>
         <CardContent className="p-8">
@@ -102,7 +105,7 @@ export default function Home() {
               className="w-full p-3 border border-gray-300 rounded-lg mb-4"
             />
             <Button type="submit" className="w-full">
-              Fetch Content
+             Gerar Cardápio 
             </Button>
           </form>
           {error && <p className="text-red-500 text-center mb-4">{error}</p>}
